@@ -1,6 +1,8 @@
-import React from "react";
+import { SimpleCell, Spinner } from "@vkontakte/vkui";
+import React, { useEffect } from "react";
+import { useMemo } from "react";
 import { useState } from "react";
-import { getGroupsResponse } from "../stores/groupsResponse";
+import { GroupInfo } from "./components/groupInfo";
 import { GroupSelector } from "./components/groupSelector";
 
 export interface GetGroupsResponse {
@@ -27,12 +29,50 @@ export function GroupsResponse() {
     result: 0,
   });
   const [groups, setGroups] = useState<Group[] | undefined>([]);
-  setGroupsResponse(getGroupsResponse);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  if (groupsResponse.result === 0 || !groupsResponse.data) {
-    return null;
-  }
+  useEffect(() => {
+    setIsLoading(true);
+    const fetchGroups = async () => {
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      try {
+        const response = await fetch("./groups.json");
 
-  setGroups(groupsResponse.data);
-  return (<GroupSelector />);
+        if (!response.ok) {
+          setGroupsResponse({
+            result: 0,
+          });
+        }
+        const data = await response.json();
+        setGroupsResponse({
+          result: 1,
+          data: data,
+        });
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchGroups();
+  }, []);
+
+  return useMemo(() => {
+    if (isLoading) {
+      return <Spinner size="large" style={{ margin: "20px 0" }} />;
+    }
+
+    if (groupsResponse.result === 0 || !groupsResponse.data) {
+      console.error("Error loading data");
+
+      return <SimpleCell>Ошибочка вышла ¯\_(ツ)_/¯</SimpleCell>;
+    }
+
+    return (
+      <>
+        <GroupSelector allGroups={groupsResponse.data} setGroups={setGroups} />
+        {groups?.map((group) => {
+          return <GroupInfo group={group} key={group.id} />;
+        })}
+      </>
+    );
+  }, [groupsResponse, groups, isLoading]);
 }

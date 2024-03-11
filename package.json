@@ -14,7 +14,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build",
+    "build": "webpack",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
@@ -38,6 +38,9 @@
   },
   "devDependencies": {
     "node-mocks-http": "^1.14.1",
-    "prettier": "3.2.5"
+    "prettier": "3.2.5",
+    "svg-inline-loader": "^0.8.2",
+    "webpack": "^5.90.3",
+    "webpack-cli": "^5.1.4"
   }
 }

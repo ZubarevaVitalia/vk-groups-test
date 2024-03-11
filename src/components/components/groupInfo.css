@@ -1,0 +1,16 @@
+.icon {
+  border: 1px solid #000000;
+  border-radius: 50%;
+  height: 100px;
+  width: 100px;
+}
+
+.divInfo {
+  padding-left: 20px;
+}
+
+.popOver {
+  background-color: #ecf2fa;
+  border-radius: 8;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
